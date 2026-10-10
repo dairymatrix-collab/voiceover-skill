@@ -41,6 +41,7 @@ It is **not** a hosted TTS API, a cloud voice service, an Android app/APK, or a 
 | `schemas/` | Versioned JSON request, result, report, and evidence schemas. |
 | `tests/` | Model-free contract, boundary, packaging, and adapter tests. |
 | `research/` | Audited upstream source snapshots, comparison material, smoke evidence, and sample output; see the local license files and upstream references. |
+| `release-artifacts/` | Prebuilt Skill/plugin ZIPs, the accepted WAV sample, smoke/inspection reports, and SHA-256 release manifest. |
 | `OFFLINE_INSTALL_AND_READINESS.md` | Isolated environments, wheelhouses, model staging, offline gates, and privacy notes. |
 | `OPTIONAL_TTS_ENGINES.md` | Optional-engine behavior, diagnostic limits, and upstream API notes. |
 | `FINAL_TEST_EVIDENCE_REPORT.md` | Chronological acceptance mappings, test evidence, and known limitations. |
@@ -87,10 +88,12 @@ python scripts/package_voiceover_skill.py --output-dir ../voiceover_skill_distri
 
 | Generated file | Intended use |
 |---|---|
-| `voiceover-agent-skill.zip` | Standalone Agent Skill directory (`voiceover-skill/SKILL.md` plus its backend, references, and templates). Use only with a host whose import/discovery contract accepts this layout. |
-| `voiceover-claude-code-plugin.zip` | Claude Code Plugin layout with its own plugin manifest and bundled Skill. |
-| `voiceover-minimax-code-dual-plugin.zip` | MiniMax Code compatibility layout for the documented 0.3.x and 0.4.0+ formats. |
-| `voiceover-minimax-marketplace-plugin.zip` | Separate native MiniMax Marketplace submission format; it is not the MiniMax Code compatibility ZIP and may require platform review. |
+| [`voiceover-agent-skill.zip`](release-artifacts/voiceover-agent-skill.zip) | Standalone Agent Skill directory (`voiceover-skill/SKILL.md` plus its backend, references, and templates). Use only with a host whose import/discovery contract accepts this layout. |
+| [`voiceover-claude-code-plugin.zip`](release-artifacts/voiceover-claude-code-plugin.zip) | Claude Code Plugin layout with its own plugin manifest and bundled Skill. |
+| [`voiceover-minimax-code-dual-plugin.zip`](release-artifacts/voiceover-minimax-code-dual-plugin.zip) | MiniMax Code compatibility layout for the documented 0.3.x and 0.4.0+ formats. |
+| [`voiceover-minimax-marketplace-plugin.zip`](release-artifacts/voiceover-minimax-marketplace-plugin.zip) | Separate native MiniMax Marketplace submission format; it is not the MiniMax Code compatibility ZIP and may require platform review. |
+
+These current ZIPs are also checked into [`release-artifacts/`](release-artifacts/); see its [SHA-256 manifest](release-artifacts/RELEASE_MANIFEST.md). That folder includes the accepted Qwen3-TTS sample WAV and its smoke/independent-inspection JSON reports. They are evidence samples, not a guarantee of subjective voice quality.
 
 All packages contain source, schemas, and instructions—not Python runtimes, TTS weights, credentials, native binaries, or automatic install hooks. Keep the folder layout intact. Install/import through the target host’s current official workflow; a valid ZIP structure does not prove that the host allows local Python execution. For the standalone ZIP, for example, extract it into the host’s documented Skill directory so that `voiceover-skill/SKILL.md` remains beside its `backend/`, `references/`, and `templates/` folders.
 
