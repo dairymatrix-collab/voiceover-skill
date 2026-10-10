@@ -30,8 +30,11 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
+      - name: Create isolated test environment
+        run: python -m venv .venv
+
       - name: Install test dependencies
-        run: python -m pip install -r requirements-dev.txt
+        run: .venv/bin/python -m pip install -r requirements-dev.txt
 
       - name: Run test suite
-        run: python -m pytest -q
+        run: .venv/bin/python -m pytest -q
