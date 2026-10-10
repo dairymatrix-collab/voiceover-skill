@@ -1,0 +1,30 @@
+# Python bytecode and test/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments and credentials
+.venv/
+.venvs/
+venv/
+.env
+.env.*
+!.env.example
+
+# Local model artifacts and offline package staging
+models/
+model-cache/
+wheelhouse/
+
+# Personal prompts/profiles and generated files; keep user data out of commits
+private/
+voice-profiles/
+voice-profile-store/
+voiceover-output/
+/output/
+/reports/
+
+# Local build outputs
+/build/

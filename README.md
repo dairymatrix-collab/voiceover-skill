@@ -1,6 +1,202 @@
-# Voiceover Skill — Local Pipeline and Contract Harness
+# Voiceover Skill — Local Python TTS Pipeline for Kokoro and Qwen3-TTS
 
-**Purpose:** a local voiceover pipeline with versioned request contracts, reusable profiles, setup/artifact preflights, isolation, and independent WAV checks. **Phase 0 remains open for broader coverage:** real inference has been demonstrated for one Kokoro English CPU smoke profile and one Qwen3-TTS VoiceDesign English CPU profile. Both generated WAVs passed seven objective checks on this host; this does not prove subjective quality, broad language/voice coverage, or long-run stability. Chatterbox and Qwen CustomVoice preset remain unverified and are withheld from the Skill runtime; external agent-runtime integration also remains unverified.
+**Voiceover Skill** is a local Python text-to-speech (TTS) and voiceover-generation project for profile-backed WAV synthesis, resource preflights, and output validation. It includes a portable Agent Skill, a model-free contract/test harness, and reproducible package builders. Verified scope: one Kokoro English CPU smoke profile and one Qwen3-TTS VoiceDesign English CPU profile; both generated WAVs passed seven objective checks on the tested host. These limited checks do not establish subjective speech quality, broad language/voice coverage, long-run stability, or performance on another computer. Phase 0 remains **OPEN / HOLD**; Chatterbox and Qwen CustomVoice preset are unverified and withheld from the installable Skill runtime, and external agent-runtime integration remains unverified.
+
+## Start here
+
+- [Install and test the source project](#install-and-test-the-source-project) for development, contract tests, and local CLI tools.
+- [Build an installable Skill or plugin ZIP](#build-installable-skill-and-plugin-packages) for a supported Agent Skills host.
+- [Set up an optional TTS engine](#install-an-optional-tts-engine-and-model) only after checking the target machine and reviewing upstream requirements.
+- [Platform compatibility](skills/voiceover-skill/references/platform-compatibility.md) explains host-specific import formats and their limits.
+- [`llms.txt`](llms.txt) is a compact, factual index for AI/search systems; it does not guarantee crawling, indexing, ranking, or recommendations.
+
+## What this repository contains
+
+This repository combines two related deliverables:
+
+1. **A Python voiceover/TTS reference pipeline and contract harness** at the repository root: request validation, deterministic routing, worker orchestration, resource and artifact preflights, voice-profile management, WAV inspection, JSON schemas, tests, research notes, and release evidence.
+2. **An installable Agent Skill source bundle** at [`skills/voiceover-skill/`](skills/voiceover-skill/), with `SKILL.md`, a bundled backend, API/platform references, a sample request, and an icon. The package builders create separate Skill and plugin distributions for compatible hosts.
+
+It is **not** a hosted TTS API, a cloud voice service, an Android app/APK, or a bundle of neural model weights. The `requirements-dev.txt` file installs test/development dependencies; it does not install the optional neural engines or their model files.
+
+### Verified synthesis paths
+
+| Engine and profile mode | What was verified | Important boundary |
+|---|---|---|
+| Kokoro `preset` | One English CPU WAV using `af_heart` passed seven objective smoke checks. | One tested preset/path only; no claim about every voice, language, host, or subjective quality. Kokoro can attempt cache downloads when required files are absent. |
+| Qwen3-TTS `voice_design` | One English, saved-prompt CPU profile passed seven objective checks; the accepted sample used the checkpoint’s native BF16 weights. | One tested prompt/path only. The CPU policy requires at least 14 GiB available RAM at preflight, keeps a 10-GiB process-tree RSS cap, uses two CPU threads, and has a 300-second smoke deadline. |
+| Chatterbox / reference-audio cloning | Not accepted as a Skill runtime route. | The install, download, profile, and synthesis CLIs withhold this mode. |
+| Qwen3-TTS `CustomVoice` preset | Not accepted as a Skill runtime route. | Do not select it as a supported Skill mode until a real WAV smoke passes. |
+
+“Ready” package/model checks are not proof of model loading or inference. Only a successful real synthesis plus independent WAV/manifest checks qualifies as inference evidence. See [`OFFLINE_INSTALL_AND_READINESS.md`](OFFLINE_INSTALL_AND_READINESS.md) and the [API reference](skills/voiceover-skill/references/api_reference.md) for exact gates and current limitations.
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `README.md` | Project summary, verified status, installation choices, testing, and links. |
+| `skills/voiceover-skill/SKILL.md` | Agent-facing workflow and safety/resource rules. |
+| `skills/voiceover-skill/backend/` | This directory is assembled by the package builder; the source backend modules live at the repository root. |
+| `scripts/` | Preflight, setup/download, profile, synthesis, inspection, validation, and packaging CLIs. |
+| `schemas/` | Versioned JSON request, result, report, and evidence schemas. |
+| `tests/` | Model-free contract, boundary, packaging, and adapter tests. |
+| `research/` | Audited upstream source snapshots, comparison material, smoke evidence, and sample output; see the local license files and upstream references. |
+| `OFFLINE_INSTALL_AND_READINESS.md` | Isolated environments, wheelhouses, model staging, offline gates, and privacy notes. |
+| `OPTIONAL_TTS_ENGINES.md` | Optional-engine behavior, diagnostic limits, and upstream API notes. |
+| `FINAL_TEST_EVIDENCE_REPORT.md` | Chronological acceptance mappings, test evidence, and known limitations. |
+| `SHA256SUMS` | SHA-256 manifest for the packaged source files; it excludes itself and the ZIP container. |
+
+## Install and test the source project
+
+The source checkout is the right option for contributors, maintainers, and users who need the root-level test suite or CLI tools. Clone the repository or extract the source archive, then run from the project root.
+
+```bash
+git clone https://github.com/dairymatrix-collab/voiceover-skill.git
+cd voiceover-skill
+sha256sum -c SHA256SUMS
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
+On Windows PowerShell, create/activate a virtual environment with the Python launcher, then use the same requirements and test commands:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
+The commands above install the **test/development harness only**. `requirements-dev.txt` pins pytest and jsonschema and bounds the audio-test dependencies (`numpy`, `soundfile`, and `psutil`). It does not install Kokoro, Qwen3-TTS, PyTorch, FFmpeg/eSpeak, or model weights. Python 3.10–3.12 is the project’s current optional-engine setup policy; always check the selected upstream engine’s Python, OS, architecture, accelerator, and license requirements. Full direct Windows and macOS execution was not available for the release verification, so those platforms are documented but not claimed as tested.
+
+The release regression result was **932 passed, 2 skipped, 0 failed**. The two skips require an `espeak`/`espeak-ng` executable that was absent on the verification host; an expected duplicate-ZIP-entry test warning may appear. The eSpeak test is an optional system-TTS baseline, not a neural-engine test.
+
+### Runtime helper dependencies are separate
+
+`requirements-skill.txt` lists the Skill backend’s helper libraries (`psutil`, `jsonschema`, `numpy`, and `soundfile`). Install it only in the Python environment that will run the packaged backend. Neural-engine packages and model checkpoints are a separate, explicit setup/acquisition step; do not treat this helper file as a one-command TTS engine installer.
+
+## Build installable Skill and plugin packages
+
+From the source root, generate the four reproducible ZIP layouts into a directory **outside** the source tree:
+
+```bash
+python scripts/package_voiceover_skill.py --output-dir ../voiceover_skill_distribution --check-reproducible
+```
+
+| Generated file | Intended use |
+|---|---|
+| `voiceover-agent-skill.zip` | Standalone Agent Skill directory (`voiceover-skill/SKILL.md` plus its backend, references, and templates). Use only with a host whose import/discovery contract accepts this layout. |
+| `voiceover-claude-code-plugin.zip` | Claude Code Plugin layout with its own plugin manifest and bundled Skill. |
+| `voiceover-minimax-code-dual-plugin.zip` | MiniMax Code compatibility layout for the documented 0.3.x and 0.4.0+ formats. |
+| `voiceover-minimax-marketplace-plugin.zip` | Separate native MiniMax Marketplace submission format; it is not the MiniMax Code compatibility ZIP and may require platform review. |
+
+All packages contain source, schemas, and instructions—not Python runtimes, TTS weights, credentials, native binaries, or automatic install hooks. Keep the folder layout intact. Install/import through the target host’s current official workflow; a valid ZIP structure does not prove that the host allows local Python execution. For the standalone ZIP, for example, extract it into the host’s documented Skill directory so that `voiceover-skill/SKILL.md` remains beside its `backend/`, `references/`, and `templates/` folders.
+
+### Host-specific import notes
+
+| Host or surface | Appropriate route | Verified boundary |
+|---|---|---|
+| Claude Code | Use the generated Claude Code Plugin ZIP, or place an unpacked Skill at a documented project `.claude/skills/voiceover-skill/` or user `~/.claude/skills/voiceover-skill/` path. | Local script execution still depends on host permissions, shell access, and environment setup. Claude Code plugins, Claude Desktop Skills, and API-uploaded Skills are different surfaces. |
+| Gemini CLI | The documented Skill directories are `.gemini/skills/voiceover-skill/` or `.agents/skills/voiceover-skill/`; the standalone ZIP can be extracted there if the installed CLI accepts that layout. | Follow the CLI’s current skill-link/import and workspace-trust prompts. No Gemini-specific ZIP is emitted by this project. |
+| MiniMax Code | Use `voiceover-minimax-code-dual-plugin.zip` for its two compatibility layouts. | Keep it separate from the Marketplace submission ZIP; M3 is a model target, not itself a Skill host. |
+| MiniMax Marketplace | Use `voiceover-minimax-marketplace-plugin.zip` for the documented native submission layout. | Submission is not the same as a local install; approval or listing is not guaranteed. |
+| Cue | Cue’s Skills UI includes **Import from GitHub** (Settings → Skills → Add Skills on phone; Settings → Skills → Add on desktop). | Importing the instructions does not prove that Cue can execute this Skill’s bundled local Python backend. End-to-end TTS execution in Cue has not been verified. |
+| Model APIs / other agent hosts | Integrate through a host-controlled, allowlisted local runner or a separately configured tool/MCP adapter if the host supports it. | Calling a text-generation API alone does not install or execute local Python files. Check the host’s import, filesystem, and command-execution contract first. |
+
+See [`platform-compatibility.md`](skills/voiceover-skill/references/platform-compatibility.md) before claiming native support for another host. Installing a Skill means making its instructions discoverable; it does not execute the installer, install Python/engine packages, fetch model files, or grant permissions automatically.
+
+## Install an optional TTS engine and model
+
+Engine setup is **separate** from source tests and Skill/plugin installation. Use an isolated Python environment per engine, check upstream support/licensing for the target OS and accelerator, and run read-only checks before any installation or model download:
+
+```bash
+python3.12 scripts/preflight_tts_install.py --engine kokoro --skip-network --pretty
+python3.12 scripts/preflight_tts_install.py --engine qwen3_tts --skip-network --pretty
+python3.12 scripts/preflight_tts_resources.py --engine kokoro --pretty
+python3.12 scripts/preflight_tts_resources.py --engine qwen3_tts --pretty
+```
+
+The setup command is plan-only unless `--install` is explicitly supplied. Review the plan first. Example Kokoro plan and explicit install:
+
+```bash
+python3.12 scripts/setup_tts_engine.py --engine kokoro --environment .venvs/kokoro --python python3.12 --pretty
+python3.12 scripts/setup_tts_engine.py --engine kokoro --environment .venvs/kokoro --python python3.12 --install --timeout-seconds 1800 --pretty
+```
+
+Example Qwen3-TTS **CPU-only** plan and explicit install:
+
+```bash
+python3.12 scripts/setup_tts_engine.py --engine qwen3_tts --environment .venvs/qwen3-tts --python python3.12 --cpu-only --pretty
+python3.12 scripts/setup_tts_engine.py --engine qwen3_tts --environment .venvs/qwen3-tts --python python3.12 --cpu-only --install --timeout-seconds 1800 --pretty
+```
+
+These are examples, not universal compatibility guarantees. Setup changes the selected virtual environment only when `--install` is present. Review current upstream version/OS requirements before installing. For an offline install, prepare and audit a wheelhouse for the exact OS, CPU architecture, Python ABI, and accelerator stack, then use `--wheelhouse ./wheelhouse --no-index`; no wheelhouse is included in this repository. See [`OFFLINE_INSTALL_AND_READINESS.md`](OFFLINE_INSTALL_AND_READINESS.md) for the complete staged workflow.
+
+Model downloads are a **second, separate action**. First use `--plan-only`; only use `--download` after reviewing the pinned model/revision, resource preflight, disk impact, upstream terms, and authorization. The Qwen VoiceDesign snapshot is about 4.5 GB. Model weights are not bundled. For offline inference, stage all required files and dependencies in advance; a successful package import or artifact scan does not mean the model will load or synthesize speech. Kokoro may attempt a lazy cache download if files are missing, so `--skip-network` on a preflight does not make a later Kokoro synthesis request offline. The Qwen profile adapter uses local-only model loading.
+
+Use the artifact inspector to check the adapter-specific file layout, not to claim inference:
+
+```bash
+python3.12 scripts/inspect_tts_artifacts.py --engine kokoro --schema-version 2 --model-root ./staged-models --report ./kokoro-artifacts.json --pretty
+python3.12 scripts/inspect_tts_artifacts.py --engine qwen3_tts --schema-version 2 --model-variant voice_design --model-root ./staged-models --report ./qwen-artifacts.json --pretty
+```
+
+## Create a profile, synthesize, and verify a WAV
+
+The installable Skill exposes only the two verified profile modes. Keep voice descriptions and profile stores on a private local path; a voice prompt is personal data and is not part of a request or output manifest.
+
+Create the verified Kokoro English preset profile:
+
+```bash
+python3 scripts/voice_profiles.py --store ./private/voice-profiles create --profile-id kokoro-en --name "Kokoro narrator" --engine kokoro --mode preset --language en --voice-id af_heart --control speed=1.0
+```
+
+For Qwen VoiceDesign, save the user-approved voice description in a private UTF-8 file (maximum 1,600 characters) and create a profile with `--engine qwen3_tts --mode voice_design --language en --voice-description-file "./private/voice-description.txt"`. Do not put the prompt in shell history, logs, public issues, or this repository. Use [`qwen-voice-design-request-v2.json`](skills/voiceover-skill/templates/qwen-voice-design-request-v2.json) as the complete request example; make its `voice_profile_id`, request/job IDs, and narration text match your own setup and validate it against [`synthesis-request-v2.schema.json`](schemas/synthesis-request-v2.schema.json).
+
+Run the profile-backed request in the same engine Python environment and profile store, then inspect the exact WAV path returned by the runner:
+
+```bash
+python3 scripts/run_voiceover.py --request ./request.json --profile-store ./private/voice-profiles --output-dir ./voiceover-output --timeout-seconds 300
+python3 scripts/inspect_voiceover_audio.py ./voiceover-output/voiceover.wav --pretty
+```
+
+For a fresh, end-to-end real-inference acceptance gate, run `scripts/real_inference_smoke.py` with the same request and profile store. Require a `PASS`, all checks, and the audio manifest. For Qwen VoiceDesign, retain the 300-second deadline and fixed CPU resource policy; do not raise RAM/RSS/thread/time limits. Objective signal metrics do not establish pronunciation, intelligibility, naturalness, or speaker identity—listen separately when those qualities matter.
+
+## Privacy, safety, licensing, and public use
+
+- Keep personal voice prompts, profile stores, private narration, local model caches, and generated audio out of commits. Review reports before sharing; absolute local paths can reveal usernames or directory structure.
+- The worker/resource guards are not an OS security sandbox. Do not run untrusted engine/model code in a sensitive environment. Do not bypass path, RAM, RSS, disk, thread, timeout, or file-size protections.
+- Model weights are separate from this project and have their own upstream licenses/terms. Verify them before downloading or redistributing.
+- This source bundle has **no top-level project `LICENSE`**. Public visibility permits viewing the repository but does not grant a blanket reuse or relicensing right. Audited third-party source snapshots have their own license files in their respective research directories; retain and follow those terms. Do not add a project-wide license without choosing one deliberately.
+- Public GitHub visibility and AI-search files cannot guarantee indexing, ranking, stars, or virality. Repository description/topics and this README will use accurate terms rather than keyword stuffing or unsupported claims.
+
+## FAQ
+
+### Does the repository include TTS model weights or run a hosted API?
+
+No. It is a local Python workflow and test harness; model weights and optional engine runtimes must be installed/acquired separately. It is not a hosted voice API or an Android APK.
+
+### Which voiceover modes are supported by the installable Skill?
+
+Only `kokoro/preset` and `qwen3_tts/voice_design` have accepted real WAV smoke evidence. Chatterbox/reference cloning and Qwen CustomVoice preset remain withheld. See the verification table above and [`CUSTOM_VOICE_MODEL_SELECTION.md`](CUSTOM_VOICE_MODEL_SELECTION.md).
+
+### Can I run it fully offline?
+
+Only after staging compatible Python packages and all required model/cache files. Qwen VoiceDesign synthesis is configured for local-only loading. Kokoro can lazily request files if the effective cache is incomplete; a read-only preflight or `--skip-network` flag alone does not disable that inference-time behavior.
+
+### Does importing the Skill into Cue mean TTS will run there?
+
+No such runtime compatibility has been verified. Cue can import a Skill from GitHub, but the backend still needs a supported way to execute local Python, install the helper/engine packages, and access model files.
+
+### How do I run tests and validate the package?
+
+Install `requirements-dev.txt`, run `python -m pytest -q`, and verify `SHA256SUMS`. To rebuild installable ZIPs or a source archive, use the reproducible commands below. The model-free suite does not download models or prove real inference.
+
+### Where are the exact schemas, CLI controls, and error meanings?
+
+Use [`skills/voiceover-skill/references/api_reference.md`](skills/voiceover-skill/references/api_reference.md), the matching JSON file under `schemas/`, and the structured report. Do not infer support from a package being installed.
 
 ## Requirements
 - Python 3.10–3.12 for the current optional-engine setup policy; check each upstream engine's requirements before extending it.
@@ -514,4 +710,4 @@ The first Qwen VoiceDesign CPU attempt used the default FP32 loader and was stop
 
 ### D0-461–D0-470 verified-only follow-up
 
-The native-BF16 Qwen sample and the runtime/CLI gates that withhold unverified modes are recorded in the [task ledger](D0_461_470_TASK_LEDGER.md) and [bilingual evidence report](D0_461_470_TEST_EVIDENCE.md). The final package files and integrity results are listed in the companion release manifest.
+The native-BF16 Qwen sample and the runtime/CLI gates that withhold unverified modes are recorded in the [task ledger](D0_461_470_TASK_LEDGER.md) and [bilingual evidence report](D0_461_470_TEST_EVIDENCE.md). Rebuild the four reproducible Skill/plugin ZIPs and source archive using the packaging commands above; generated ZIPs are not committed to this source tree.

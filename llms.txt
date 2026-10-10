@@ -1,0 +1,37 @@
+# Voiceover Skill
+
+> A local Python text-to-speech (TTS) and voiceover workflow with reusable profiles, resource-gated synthesis, and WAV validation.
+
+Voiceover Skill is a source project, contract harness, and Agent Skill bundle. It is not a hosted TTS API. Neural model weights and engine runtimes are not included.
+
+## Canonical project documents
+
+- [README](README.md): project overview, tested scope, setup choices, package generation, host compatibility, privacy, licensing, and FAQ.
+- [Agent Skill instructions](skills/voiceover-skill/SKILL.md): user-facing local workflow, profile rules, resource gates, and failure handling.
+- [API reference](skills/voiceover-skill/references/api_reference.md): supported profile modes, exact CLI commands, request fields, controls, and statuses.
+- [Offline installation and readiness](OFFLINE_INSTALL_AND_READINESS.md): wheelhouse/model staging, supported file layouts, offline boundaries, and readiness gates.
+- [Platform compatibility](skills/voiceover-skill/references/platform-compatibility.md): host import formats and what has or has not been verified.
+- [Optional TTS engines](OPTIONAL_TTS_ENGINES.md): engine behavior, dependency readiness, and upstream notes.
+- [Final test evidence](FINAL_TEST_EVIDENCE_REPORT.md): chronological test, acceptance, and limitation records.
+- [D0-461–470 task ledger](D0_461_470_TASK_LEDGER.md): final verified-only changes and release verification summary.
+- [SHA-256 manifest](SHA256SUMS): integrity checks for the packaged source files; the manifest does not hash itself or a ZIP container.
+
+## Verified runtime facts
+
+- The installable Skill currently exposes only `kokoro/preset` and `qwen3_tts/voice_design`.
+- One English Kokoro CPU preset smoke (`af_heart`) and one English Qwen3-TTS VoiceDesign CPU profile smoke passed seven objective WAV checks on the tested host.
+- These samples do not establish subjective naturalness, pronunciation, speaker identity, broad language coverage, long-run stability, or performance on other hosts.
+- Chatterbox/reference-audio cloning and Qwen3-TTS CustomVoice preset remain unverified and are withheld from the Skill setup, download, profile, and synthesis CLIs.
+- A passing package or model-artifact check is not inference evidence; a real generated WAV and its manifest must pass the smoke checks.
+
+## Installation map
+
+- Use `requirements-dev.txt` for the model-free Python regression suite.
+- Use `requirements-skill.txt` for the packaged backend's helper libraries.
+- Build the standalone Skill and host-specific plugin ZIPs with `scripts/package_voiceover_skill.py --check-reproducible`.
+- Install neural-engine packages into a separate compatible environment with the plan-first setup CLI; stage model assets in a separate, explicit step.
+- `OFFLINE_INSTALL_AND_READINESS.md` explains the target-specific offline wheelhouse and model-cache workflow.
+
+## Important limits
+
+This project is a local Python workflow, not an Android APK, hosted service, or security sandbox. The Qwen CPU policy requires at least 14 GiB available RAM at preflight, retains a 10-GiB process-tree RSS cap and two-thread policy, and uses a 300-second smoke deadline. Do not raise these limits. Model files have separate upstream terms. The source bundle has no top-level project license; public visibility does not itself grant reuse rights. Cue can import Skills from GitHub, but this backend's end-to-end execution in Cue has not been verified.
