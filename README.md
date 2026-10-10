@@ -1,5 +1,7 @@
 # Voiceover Skill — Local Python TTS Pipeline for Kokoro and Qwen3-TTS
 
+[![Python CI](https://github.com/dairymatrix-collab/voiceover-skill/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dairymatrix-collab/voiceover-skill/actions/workflows/ci.yml)
+
 **Voiceover Skill** is a local Python text-to-speech (TTS) and voiceover-generation project for profile-backed WAV synthesis, resource preflights, and output validation. It includes a portable Agent Skill, a model-free contract/test harness, and reproducible package builders. Verified scope: one Kokoro English CPU smoke profile and one Qwen3-TTS VoiceDesign English CPU profile; both generated WAVs passed seven objective checks on the tested host. These limited checks do not establish subjective speech quality, broad language/voice coverage, long-run stability, or performance on another computer. Phase 0 remains **OPEN / HOLD**; Chatterbox and Qwen CustomVoice preset are unverified and withheld from the installable Skill runtime, and external agent-runtime integration remains unverified.
 
 ## Start here
