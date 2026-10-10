@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:synthesis-request-v2",
+  "title": "Voiceover synthesis request v2 (profile-backed)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_type",
+    "request_id",
+    "job_id",
+    "engine_id",
+    "text",
+    "voice_profile_id",
+    "options",
+    "deadline_ms"
+  ],
+  "properties": {
+    "protocol_version": {"type": "integer", "const": 2},
+    "message_type": {"const": "synthesis.request"},
+    "request_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "maxLength": 64},
+    "job_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "maxLength": 64},
+    "engine_id": {"enum": ["qwen3_tts", "kokoro"]},
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]*$"
+    },
+    "voice_profile_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "maxLength": 64},
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_format"],
+      "properties": {
+        "chunk_chars": {"type": "integer", "minimum": 100, "maximum": 1200},
+        "output_name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,123}\\.wav$", "maxLength": 128},
+        "output_format": {"const": "wav"}
+      }
+    },
+    "deadline_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+    "trace_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "maxLength": 64}
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/provider-conformance-evidence-v1.schema.json",
+  "title": "Isolation Provider Conformance Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "provider_id", "provider_version", "target_platform", "provider_status", "gate_allowed", "gate_reasons", "capability_report", "checks", "overall_status", "limitations"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "provider_id": {"type": "string", "minLength": 1},
+    "provider_version": {"type": "string", "minLength": 1},
+    "target_platform": {"type": "string", "minLength": 1},
+    "provider_status": {"enum": ["UNVERIFIED", "VERIFIED"]},
+    "gate_allowed": {"type": "boolean"},
+    "gate_reasons": {"type": "array", "items": {"type": "string"}},
+    "capability_report": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider_id", "provider_version", "platform", "status", "capabilities", "limitations", "verification_evidence"],
+      "properties": {
+        "provider_id": {"type": "string", "minLength": 1},
+        "provider_version": {"type": "string", "minLength": 1},
+        "platform": {"type": "string", "minLength": 1},
+        "status": {"enum": ["UNVERIFIED", "VERIFIED"]},
+        "capabilities": {"type": "object", "propertyNames": {"minLength": 1}, "additionalProperties": {"type": "boolean"}},
+        "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "verification_evidence": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "checks": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["check_id", "status", "detail"],
+        "properties": {
+          "check_id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["PASS", "FAIL", "BLOCKED", "NOT_RUN"]},
+          "detail": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "overall_status": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "allOf": [
+    {"if": {"properties": {"gate_allowed": {"const": false}}, "required": ["gate_allowed"]}, "then": {"properties": {"overall_status": {"const": "BLOCKED"}}}}
+  ]
+}

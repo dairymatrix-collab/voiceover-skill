@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:tts-model-download-report-v1",
+  "title": "TTS model download report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "engine_id", "model_variant", "model_id",
+    "pinned_revision", "download_ref", "license", "cache_dir",
+    "download_requested", "installation_performed", "model_downloaded",
+    "inference_verified", "allow_patterns", "required_files",
+    "expected_file_bytes", "maximum_download_bytes", "minimum_free_disk_bytes",
+    "observed_free_disk_bytes", "resource_preflight", "blocking_reasons",
+    "peak_process_tree_rss_mb", "elapsed_ms", "files", "sources", "notes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["PLAN_ONLY", "BLOCKED_RESOURCE", "ALREADY_AVAILABLE", "DOWNLOADED", "DOWNLOAD_FAILED", "DOWNLOAD_TIMEOUT"]},
+    "engine_id": {"enum": ["qwen3_tts", "chatterbox", "kokoro"]},
+    "model_variant": {"type": "string", "minLength": 1, "maxLength": 32},
+    "model_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "pinned_revision": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "download_ref": {"type": "string", "minLength": 1, "maxLength": 80},
+    "license": {"type": "string", "minLength": 1, "maxLength": 64},
+    "cache_dir": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "download_requested": {"type": "boolean"},
+    "installation_performed": {"const": false},
+    "model_downloaded": {"type": "boolean"},
+    "inference_verified": {"const": false},
+    "allow_patterns": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "required_files": {"type": "array", "maxItems": 128, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "expected_file_bytes": {"type": ["integer", "null"], "minimum": 1},
+    "maximum_download_bytes": {"type": "integer", "minimum": 1},
+    "minimum_free_disk_bytes": {"type": "integer", "minimum": 1},
+    "observed_free_disk_bytes": {"type": ["integer", "null"], "minimum": 0},
+    "resource_preflight": {"type": "object"},
+    "blocking_reasons": {"type": "array", "items": {"type": "string", "maxLength": 128}},
+    "peak_process_tree_rss_mb": {"type": ["integer", "null"], "minimum": 0},
+    "elapsed_ms": {"type": "integer", "minimum": 0},
+    "files": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size_bytes", "is_symlink_in_snapshot"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1, "maxLength": 256},
+          "size_bytes": {"type": "integer", "minimum": 1},
+          "is_symlink_in_snapshot": {"type": "boolean"}
+        }
+      }
+    },
+    "sources": {"type": "array", "items": {"type": "string", "format": "uri"}},
+    "hub_integrity": {"type": "string", "maxLength": 160},
+    "snapshot_path": {"type": "string", "maxLength": 4096},
+    "resolved_revision": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "downloaded_bytes": {"type": "integer", "minimum": 1},
+    "file_count": {"type": "integer", "minimum": 1, "maximum": 128},
+    "notes": {"type": "array", "items": {"type": "string", "maxLength": 1024}}
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"TTS Artifact Readiness v1",
+  "type":"object",
+  "required":["schema_version","diagnostic_only","inference_verified","installation_performed","model_downloaded","engines","ready_engine_count"],
+  "properties":{
+    "schema_version":{"const":1},"diagnostic_only":{"const":true},"inference_verified":{"const":false},"installation_performed":{"const":false},"model_downloaded":{"const":false},
+    "ready_engine_count":{"type":"integer","minimum":0},"engines":{"type":"array","items":{"$ref":"#/$defs/report"}}
+  },
+  "$defs":{
+    "report":{"type":"object","required":["schema_version","diagnostic_only","engine","status","model_root","artifacts","artifact_ready","inference_verified","installation_performed","model_downloaded"],"properties":{
+      "schema_version":{"const":1},"diagnostic_only":{"const":true},"engine":{"enum":["kokoro","qwen3_tts","chatterbox"]},"status":{"enum":["MODEL_ROOT_NOT_CONFIGURED","ARTIFACTS_MISSING","ARTIFACTS_READY"]},"model_root":{"type":["string","null"]},"artifact_ready":{"type":"boolean"},"inference_verified":{"const":false},"installation_performed":{"const":false},"model_downloaded":{"const":false},"missing_required":{"type":"array","items":{"type":"string"}},
+      "artifacts":{"type":"array","items":{"type":"object","required":["engine_id","artifact_id","relative_candidates","required","kind","present","matched_path","match_count"],"properties":{"engine_id":{"type":"string"},"artifact_id":{"type":"string"},"relative_candidates":{"type":"array","items":{"type":"string"}},"required":{"type":"boolean"},"kind":{"enum":["file","directory"]},"present":{"type":"boolean"},"matched_path":{"type":["string","null"]},"match_count":{"type":"integer","minimum":0},"size_bytes":{"type":"integer","minimum":0},"sha256_prefix_safe":{"type":"string"},"regular_file_count_estimate":{"type":"integer","minimum":0}}}}
+    }}
+  }
+}

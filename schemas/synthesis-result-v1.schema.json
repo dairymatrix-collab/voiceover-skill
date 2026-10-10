@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:synthesis-result-v1",
+  "title": "Voiceover synthesis terminal result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_type",
+    "request_id",
+    "job_id",
+    "status",
+    "duration_ms",
+    "output",
+    "error"
+  ],
+  "properties": {
+    "protocol_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "message_type": {
+      "const": "synthesis.result"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "maxLength": 64
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "maxLength": 64
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error",
+        "cancelled"
+      ]
+    },
+    "duration_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "output": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "relative_path",
+            "format",
+            "sample_rate_hz",
+            "channels",
+            "frame_count",
+            "size_bytes"
+          ],
+          "properties": {
+            "relative_path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))[A-Za-z0-9_./-]+$"
+            },
+            "format": {
+              "const": "wav"
+            },
+            "sample_rate_hz": {
+              "type": "integer",
+              "minimum": 8000,
+              "maximum": 384000
+            },
+            "channels": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "frame_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      ]
+    },
+    "error": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "properties": {
+            "code": {
+              "enum": [
+                "PROTOCOL_INVALID",
+                "REQUEST_INVALID",
+                "ENGINE_UNAVAILABLE",
+                "MODEL_MISSING",
+                "ARTIFACT_INTEGRITY_ERROR",
+                "TIMEOUT",
+                "CANCELLED",
+                "WORKER_CRASHED",
+                "OUTPUT_INVALID",
+                "RESOURCE_LIMIT",
+                "INTERNAL_ERROR"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 2000,
+              "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output": {
+            "type": "object"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output": {
+            "type": "null"
+          },
+          "error": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "cancelled"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output": {
+            "type": "null"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

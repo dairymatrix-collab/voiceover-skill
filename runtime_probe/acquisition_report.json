@@ -1,0 +1,54 @@
+{
+  "diagnostic_only": true,
+  "installation_performed": false,
+  "probes": [
+    {
+      "cache_dir": "/home/oai/.cache/uv",
+      "cache_dir_exists": true,
+      "cache_file_count": 11,
+      "cache_truncated": false,
+      "diagnostic_only": true,
+      "installation_performed": false,
+      "probe_exit_code": 1,
+      "requested_version": "3.12",
+      "runtime_acquired": false,
+      "schema_version": 1,
+      "status": "OFFLINE_CACHE_MISS",
+      "uv_available": true,
+      "uv_executable": "/opt/pyvenv/bin/uv"
+    },
+    {
+      "cache_dir": "/home/oai/.cache/uv",
+      "cache_dir_exists": true,
+      "cache_file_count": 11,
+      "cache_truncated": false,
+      "diagnostic_only": true,
+      "installation_performed": false,
+      "probe_exit_code": 1,
+      "requested_version": "3.11",
+      "runtime_acquired": false,
+      "schema_version": 1,
+      "status": "OFFLINE_CACHE_MISS",
+      "uv_available": true,
+      "uv_executable": "/opt/pyvenv/bin/uv"
+    },
+    {
+      "cache_dir": "/home/oai/.cache/uv",
+      "cache_dir_exists": true,
+      "cache_file_count": 11,
+      "cache_truncated": false,
+      "diagnostic_only": true,
+      "installation_performed": false,
+      "probe_exit_code": 1,
+      "requested_version": "3.10",
+      "runtime_acquired": false,
+      "schema_version": 1,
+      "status": "OFFLINE_CACHE_MISS",
+      "uv_available": true,
+      "uv_executable": "/opt/pyvenv/bin/uv"
+    }
+  ],
+  "runtime_acquired": false,
+  "schema_version": 1,
+  "status": "NO_OFFLINE_RUNTIME_AVAILABLE"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/voiceover-audio-quality-v1.schema.json",
+  "title": "Voiceover PCM WAV Quality Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "format", "channels", "sample_width_bytes", "sample_rate_hz", "frames", "duration_seconds", "size_bytes", "sha256", "peak_normalized", "rms_normalized", "clipping_sample_ratio", "silent_frame_ratio", "all_silent", "warnings"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "format": {"const": "wav-pcm"},
+    "channels": {"enum": [1, 2]},
+    "sample_width_bytes": {"enum": [1, 2, 3, 4]},
+    "sample_rate_hz": {"type": "integer", "minimum": 8000, "maximum": 384000},
+    "frames": {"type": "integer", "minimum": 1},
+    "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "size_bytes": {"type": "integer", "minimum": 44},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "peak_normalized": {"type": "number", "minimum": 0, "maximum": 1},
+    "rms_normalized": {"type": "number", "minimum": 0, "maximum": 1},
+    "clipping_sample_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "silent_frame_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "all_silent": {"type": "boolean"},
+    "warnings": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "report": {
+    "all_silent": false,
+    "channels": 1,
+    "clipping_sample_ratio": 0.0,
+    "duration_seconds": 3.2,
+    "format": "wav-pcm",
+    "frames": 76800,
+    "path": "qwen-voice-design-bf16-smoke.wav",
+    "peak_normalized": 0.691427351,
+    "rms_normalized": 0.110700754,
+    "sample_rate_hz": 24000,
+    "sample_width_bytes": 2,
+    "schema_version": 1,
+    "sha256": "a998c90bc521e1bf9bfcbf72fbf0c96d97a13c482cbd315ad03bc920dbdc2b73",
+    "silent_frame_ratio": 0.183997396,
+    "size_bytes": 153644,
+    "warnings": []
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "audio": {
+    "all_silent": false,
+    "channels": 1,
+    "clipping_sample_ratio": 0.0,
+    "duration_seconds": 4.225,
+    "file": "voiceover.wav",
+    "format": "wav-pcm",
+    "frames": 101400,
+    "peak_normalized": 0.312295907,
+    "rms_normalized": 0.046003475,
+    "sample_rate_hz": 24000,
+    "sample_width_bytes": 2,
+    "schema_version": 1,
+    "sha256": "9d328112dd41f42c1d859c99ab2fcaf845646193e0f2096b3b09242cf843bf39",
+    "silent_frame_ratio": 0.306646943,
+    "size_bytes": 202844,
+    "warnings": []
+  },
+  "checks": [
+    {
+      "detail": "SHA-256 and byte-size match pipeline result",
+      "id": "audio_integrity",
+      "status": "PASS"
+    },
+    {
+      "detail": "manifest identity, audio digest, size and WAV metadata match",
+      "id": "manifest_integrity",
+      "status": "PASS"
+    },
+    {
+      "detail": "pipeline duration matches decoded WAV duration",
+      "id": "duration_match",
+      "status": "PASS"
+    },
+    {
+      "detail": "duration=4.225000s; expected [0.05, 600.0]s",
+      "id": "duration",
+      "status": "PASS"
+    },
+    {
+      "detail": "silent_frame_ratio=0.306647; maximum=0.98",
+      "id": "silence_ratio",
+      "status": "PASS"
+    },
+    {
+      "detail": "clipping_sample_ratio=0.000000; maximum=0.01",
+      "id": "clipping_ratio",
+      "status": "PASS"
+    },
+    {
+      "detail": "WAV decoded and PCM frame count verified",
+      "id": "audio_decode",
+      "status": "PASS"
+    }
+  ],
+  "engine_id": "kokoro",
+  "inference_verified": true,
+  "request_id": "kokoro-cpu-smoke-20261010",
+  "schema_version": 1,
+  "status": "PASS",
+  "worker_return_code": 0
+}

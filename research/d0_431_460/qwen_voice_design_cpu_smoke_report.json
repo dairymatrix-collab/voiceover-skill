@@ -1,0 +1,14 @@
+{
+  "checks": [
+    {
+      "detail": "RESOURCE_LIMIT_EXCEEDED",
+      "id": "worker_result",
+      "status": "FAIL"
+    }
+  ],
+  "error": "RESOURCE_LIMIT_EXCEEDED",
+  "inference_verified": false,
+  "schema_version": 1,
+  "status": "FAIL",
+  "worker_return_code": 137
+}

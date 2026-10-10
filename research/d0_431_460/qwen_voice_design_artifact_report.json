@@ -1,0 +1,81 @@
+{
+  "artifact_ready": true,
+  "artifacts": [
+    {
+      "artifact_id": "qwen_voice_design_model",
+      "candidate_issues": [],
+      "engine_id": "qwen3_tts",
+      "entries_scanned": 26,
+      "hash_status": "NOT_APPLICABLE",
+      "kind": "directory",
+      "match_count": 1,
+      "matched_path": "/home/ubuntu/.local/share/manus/desktops/31dff204ff863412739e6a2b0126e1b7a1eae5872cade75600ecdb5bf352b93b/cache/huggingface/hub/models--Qwen--Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+      "present": true,
+      "regular_file_count": 22,
+      "relative_candidates": [
+        "Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+        "models/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+        "models--Qwen--Qwen3-TTS-12Hz-1.7B-VoiceDesign"
+      ],
+      "relative_path": "models--Qwen--Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+      "required": true,
+      "required_file_groups": [
+        [
+          "config.json"
+        ],
+        [
+          "model.safetensors",
+          "pytorch_model.bin"
+        ],
+        [
+          "tokenizer_config.json"
+        ],
+        [
+          "vocab.json"
+        ],
+        [
+          "merges.txt"
+        ],
+        [
+          "preprocessor_config.json"
+        ],
+        [
+          "speech_tokenizer/config.json"
+        ],
+        [
+          "speech_tokenizer/model.safetensors",
+          "speech_tokenizer/pytorch_model.bin"
+        ],
+        [
+          "speech_tokenizer/preprocessor_config.json"
+        ]
+      ],
+      "satisfied_file_groups": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "state": "PRESENT",
+      "symlink_entries_seen": 11
+    }
+  ],
+  "diagnostic_only": true,
+  "engine": "qwen3_tts",
+  "hash_limit_bytes": null,
+  "inference_verified": false,
+  "installation_performed": false,
+  "missing_optional": [],
+  "missing_required": [],
+  "model_downloaded": false,
+  "model_root": "/home/ubuntu/.local/share/manus/desktops/31dff204ff863412739e6a2b0126e1b7a1eae5872cade75600ecdb5bf352b93b/cache/huggingface/hub",
+  "scan_depth_limit": 32,
+  "scan_entry_limit": 100000,
+  "schema_version": 2,
+  "status": "ARTIFACTS_READY"
+}

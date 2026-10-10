@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:tts-engine-setup-report-v1",
+  "title": "TTS engine setup report v1",
+  "type": "object",
+  "required": ["schema_version", "engine", "environment", "install_requested", "executed", "model_downloaded", "inference_verified", "package", "python_executable", "wheelhouse", "no_index", "steps", "status"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+    "environment": {"type": "string"},
+    "install_requested": {"type": "boolean"},
+    "executed": {"type": "boolean"},
+    "model_downloaded": {"const": false},
+    "inference_verified": {"const": false},
+    "package": {"type": "string"},
+    "packages_to_install": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "python_executable": {"type": "string"},
+    "wheelhouse": {"type": ["string", "null"]},
+    "no_index": {"type": "boolean"},
+    "cpu_only": {"type": "boolean"},
+    "status": {"enum": ["PLAN_ONLY", "PACKAGE_READY", "INSTALL_FAILED", "DEPENDENCY_CONFLICT", "PACKAGE_IMPORT_MISSING", "CPU_ONLY_VERIFICATION_FAILED", "BLOCKED"]},
+    "python_version": {"type": "string"},
+    "venv_python": {"type": "string"},
+    "error": {"type": "string"},
+    "detail": {"type": "string"},
+    "error_type": {"type": "string"},
+    "commands": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "steps": {"type": "array", "items": {"type": "object", "required": ["id", "status"], "properties": {"id": {"type": "string"}, "status": {"type": "string"}, "returncode": {"type": "integer"}, "stdout_tail": {"type": "string"}, "stderr_tail": {"type": "string"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": true
+}

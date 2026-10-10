@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:tts-resource-preflight-v1",
+  "title": "TTS resource preflight v1",
+  "type": "object",
+  "required": ["schema_version", "engine_id", "status", "diagnostic_only", "installation_performed", "model_downloaded", "inference_verified", "limits", "observed", "blocking_reasons", "notes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "engine_id": {"enum": ["kokoro", "qwen3_tts", "chatterbox"]},
+    "status": {"enum": ["READY_TO_ATTEMPT", "BLOCKED"]},
+    "diagnostic_only": {"const": true},
+    "installation_performed": {"const": false},
+    "model_downloaded": {"const": false},
+    "inference_verified": {"const": false},
+    "limits": {
+      "type": "object",
+      "required": ["minimum_available_memory_mb", "maximum_process_tree_rss_mb", "minimum_free_disk_mb", "cpu_threads", "max_chunk_chars", "smoke_timeout_seconds"],
+      "properties": {
+        "minimum_available_memory_mb": {"type": "integer", "minimum": 1},
+        "maximum_process_tree_rss_mb": {"type": "integer", "minimum": 1},
+        "minimum_free_disk_mb": {"type": "integer", "minimum": 1},
+        "cpu_threads": {"type": "integer", "minimum": 1, "maximum": 64},
+        "max_chunk_chars": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "smoke_timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 3600}
+      },
+      "additionalProperties": false
+    },
+    "observed": {
+      "type": "object",
+      "required": ["resource_monitor_available", "available_memory_mb", "current_process_tree_rss_mb", "free_disk_mb", "available_cpu_count"],
+      "properties": {
+        "resource_monitor_available": {"type": "boolean"},
+        "available_memory_mb": {"type": ["integer", "null"], "minimum": 0},
+        "current_process_tree_rss_mb": {"type": ["integer", "null"], "minimum": 0},
+        "free_disk_mb": {"type": ["integer", "null"], "minimum": 0},
+        "available_cpu_count": {"type": ["integer", "null"], "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "blocking_reasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["RESOURCE_MONITOR_UNAVAILABLE", "AVAILABLE_MEMORY_BELOW_MINIMUM", "FREE_DISK_BELOW_MINIMUM", "CPU_COUNT_UNAVAILABLE"]}
+    },
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

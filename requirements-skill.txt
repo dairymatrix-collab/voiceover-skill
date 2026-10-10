@@ -1,0 +1,5 @@
+# Runtime support for the local voiceover Skill. Engine/model installs are separate and explicit.
+psutil>=5.9,<8
+jsonschema>=4.25,<5
+numpy>=1.26,<3
+soundfile>=0.12,<1

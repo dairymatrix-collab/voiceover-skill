@@ -1,0 +1,3 @@
+error: Failed to install cpython-3.12.12-linux-x86_64-gnu
+  Caused by: Failed to download https://github.com/astral-sh/python-build-standalone/releases/download/20260203/cpython-3.12.12%2B20260203-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+  Caused by: Network connectivity is disabled, but the requested data wasn't found in the cache for: `https://github.com/astral-sh/python-build-standalone/releases/download/20260203/cpython-3.12.12%2B20260203-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz`

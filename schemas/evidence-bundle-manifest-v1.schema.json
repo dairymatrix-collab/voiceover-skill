@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/evidence-bundle-manifest-v1.schema.json",
+  "title": "Evidence Bundle Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_schema_version", "hash_algorithm", "canonicalization", "created_at", "envelope_path", "envelope_sha256", "files", "limitations"],
+  "properties": {
+    "manifest_schema_version": {"const": "1.0"},
+    "hash_algorithm": {"const": "sha256"},
+    "canonicalization": {"const": "utf8-json-sort-keys-compact-v1"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "envelope_path": {"type": "string", "minLength": 1},
+    "envelope_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "files": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "size_bytes"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "size_bytes": {"type": "integer", "minimum": 0}}}},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

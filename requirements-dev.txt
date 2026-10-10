@@ -1,0 +1,7 @@
+# Test runner pinned for repeatable local contract-test execution.
+pytest==9.0.2
+jsonschema==4.26.0
+# Bounded audio-adapter conversion tests; these do not install or download TTS models.
+numpy>=1.26,<3
+soundfile>=0.12,<1
+psutil>=5.9,<8

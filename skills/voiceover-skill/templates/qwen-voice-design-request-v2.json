@@ -1,0 +1,15 @@
+{
+  "protocol_version": 2,
+  "message_type": "synthesis.request",
+  "request_id": "qwen-voice-design-001",
+  "job_id": "qwen-voice-design-job-001",
+  "engine_id": "qwen3_tts",
+  "text": "Welcome. This is a short local voiceover sample.",
+  "voice_profile_id": "qwen-en-design",
+  "options": {
+    "output_format": "wav",
+    "output_name": "voiceover.wav",
+    "chunk_chars": 800
+  },
+  "deadline_ms": 300000
+}

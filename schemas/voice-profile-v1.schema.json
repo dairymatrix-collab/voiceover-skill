@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:voice-profile-v1",
+  "title": "Voiceover voice profile v1",
+  "type": "object",
+  "required": ["schema_version", "profile_id", "name", "engine_id", "mode", "language", "voice_id", "voice_description", "reference_asset", "controls", "created_utc"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "profile_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$"},
+    "name": {"type": "string", "minLength": 1, "maxLength": 80},
+    "engine_id": {"enum": ["qwen3_tts", "chatterbox", "kokoro"]},
+    "mode": {"enum": ["preset", "voice_design", "reference_clone"]},
+    "language": {"type": "string", "pattern": "^[A-Za-z0-9_-]{2,32}$"},
+    "voice_id": {"type": ["string", "null"], "maxLength": 128},
+    "voice_description": {"type": ["string", "null"], "maxLength": 1600},
+    "reference_asset": {"type": ["string", "null"], "pattern": "^assets/[A-Za-z0-9_-]{1,64}/reference\\.wav$"},
+    "controls": {
+      "type": "object",
+      "properties": {
+        "speed": {"type": "number", "minimum": 0.5, "maximum": 2.0},
+        "top_k": {"type": "integer", "minimum": 1, "maximum": 100},
+        "top_p": {"type": "number", "minimum": 0.01, "maximum": 1.0},
+        "temperature": {"type": "number", "minimum": 0.05, "maximum": 2.0},
+        "repetition_penalty": {"type": "number", "minimum": 1.0, "maximum": 2.0},
+        "max_new_tokens": {"type": "integer", "minimum": 1, "maximum": 1024},
+        "exaggeration": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "cfg_weight": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "min_p": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+      },
+      "additionalProperties": false
+    },
+    "created_utc": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "voice_design"}}},
+      "then": {"properties": {"engine_id": {"const": "qwen3_tts"}, "voice_description": {"type": "string", "minLength": 1}, "voice_id": {"type": "null"}, "reference_asset": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"mode": {"const": "reference_clone"}}},
+      "then": {"properties": {"engine_id": {"const": "chatterbox"}, "reference_asset": {"type": "string", "minLength": 1}, "voice_description": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"mode": {"const": "preset"}}},
+      "then": {"properties": {"voice_id": {"type": "string", "minLength": 1}, "voice_description": {"type": "null"}, "reference_asset": {"type": "null"}}}
+    }
+  ]
+}

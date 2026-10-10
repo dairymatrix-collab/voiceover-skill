@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/tts-environment-diagnostic-v1.schema.json",
+  "title": "TTS Environment Diagnostic v1",
+  "type": "object",
+  "required": ["schema_version", "diagnostic_only", "inference_verified", "python", "torch", "binaries", "disk", "model_cache", "checks", "engines"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "diagnostic_only": {"const": true},
+    "inference_verified": {"const": false},
+    "python": {"type": "object", "required": ["version", "implementation", "executable", "platform", "architecture"], "properties": {"version": {"type": "string"}, "implementation": {"type": "string"}, "executable": {"type": "string"}, "platform": {"type": "string"}, "architecture": {"type": "string"}}, "additionalProperties": true},
+    "memory_bytes_estimate": {"type": ["integer", "null"], "minimum": 1},
+    "torch": {"type": "object", "required": ["available", "version", "cuda_available", "cuda_version", "mps_available", "device"], "properties": {"available": {"type": "boolean"}, "version": {"type": ["string", "null"]}, "cuda_available": {"type": "boolean"}, "cuda_version": {"type": ["string", "null"]}, "mps_available": {"type": "boolean"}, "device": {"type": "string"}}, "additionalProperties": true},
+    "binaries": {"type": "object", "required": ["ffmpeg", "espeak-ng", "espeak"], "properties": {"ffmpeg": {"type": ["string", "null"]}, "espeak-ng": {"type": ["string", "null"]}, "espeak": {"type": ["string", "null"]}}, "additionalProperties": false},
+    "disk": {"type": "object", "required": ["path", "free_bytes", "total_bytes"], "properties": {"path": {"type": ["string", "null"]}, "free_bytes": {"type": ["integer", "null"], "minimum": 0}, "total_bytes": {"type": ["integer", "null"], "minimum": 0}}, "additionalProperties": false},
+    "model_cache": {"type": "object", "required": ["hf_home", "hub_exists", "qwen_default_model_directory_exists", "hub_bytes_scanned", "files_scanned", "scan_truncated"], "properties": {"hf_home": {"type": "string"}, "hub_exists": {"type": "boolean"}, "qwen_default_model_directory_exists": {"type": "boolean"}, "hub_bytes_scanned": {"type": "integer", "minimum": 0}, "files_scanned": {"type": "integer", "minimum": 0}, "scan_truncated": {"type": "boolean"}}, "additionalProperties": false},
+    "checks": {"type": "array", "items": {"type": "object", "required": ["id", "status", "detail"], "properties": {"id": {"type": "string"}, "status": {"type": "string"}, "detail": {"type": "string"}}, "additionalProperties": false}},
+    "engines": {"type": "object", "required": ["kokoro", "chatterbox", "qwen3_tts"], "properties": {"kokoro": {"$ref": "#/$defs/engine"}, "chatterbox": {"$ref": "#/$defs/engine"}, "qwen3_tts": {"$ref": "#/$defs/engine"}}, "additionalProperties": false},
+    "selected_engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+    "selected_engine_ready": {"type": "boolean"},
+    "install_plan": {"type": "object", "required": ["schema_version", "engine", "executed", "warning", "commands", "upstream_notes"], "properties": {"schema_version": {"const": 1}, "engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]}, "executed": {"const": false}, "warning": {"type": "string"}, "commands": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}}, "upstream_notes": {"type": "array", "items": {"type": "string"}}, "windows_activation_note": {"type": "string"}}, "additionalProperties": false}
+  },
+  "$defs": {
+    "engine": {"type": "object", "required": ["module_available", "distribution", "distribution_version", "required_distributions", "missing_distributions", "recommended_python", "install_command", "notes"], "properties": {"module_available": {"type": "boolean"}, "distribution": {"type": "string"}, "distribution_version": {"type": ["string", "null"]}, "required_distributions": {"type": "object", "additionalProperties": {"type": ["string", "null"]}}, "missing_distributions": {"type": "array", "items": {"type": "string"}}, "recommended_python": {"type": "string"}, "install_command": {"type": "array", "items": {"type": "string"}}, "notes": {"type": "array", "items": {"type": "string"}}, "inference_verified": {"const": false}}, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}

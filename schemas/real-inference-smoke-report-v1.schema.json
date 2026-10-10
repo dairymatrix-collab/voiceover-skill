@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/real-inference-smoke-report-v1.schema.json",
+  "title": "Real Voiceover Inference Smoke Report v1",
+  "type": "object",
+  "required": ["schema_version", "status", "inference_verified", "checks"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "inference_verified": {"type": "boolean"},
+    "worker_return_code": {"type": "integer"},
+    "error": {"type": "string"},
+    "engine_id": {"type": "string"},
+    "request_id": {"type": "string"},
+    "checks": {"type": "array", "items": {"type": "object", "required": ["id", "status", "detail"], "properties": {"id": {"type": "string"}, "status": {"enum": ["PASS", "FAIL", "BLOCKED"]}, "detail": {"type": "string"}}, "additionalProperties": false}},
+    "audio": {"type": "object", "required": ["file", "schema_version", "format", "channels", "sample_width_bytes", "sample_rate_hz", "frames", "duration_seconds", "size_bytes", "sha256", "peak_normalized", "rms_normalized", "clipping_sample_ratio", "silent_frame_ratio", "all_silent", "warnings"], "properties": {"file": {"type": "string"}, "schema_version": {"const": 1}, "format": {"const": "wav-pcm"}, "channels": {"enum": [1, 2]}, "sample_width_bytes": {"enum": [1, 2, 3, 4]}, "sample_rate_hz": {"type": "integer", "minimum": 8000, "maximum": 384000}, "frames": {"type": "integer", "minimum": 1}, "duration_seconds": {"type": "number", "exclusiveMinimum": 0}, "size_bytes": {"type": "integer", "minimum": 44}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "peak_normalized": {"type": "number", "minimum": 0, "maximum": 1}, "rms_normalized": {"type": "number", "minimum": 0, "maximum": 1}, "clipping_sample_ratio": {"type": "number", "minimum": 0, "maximum": 1}, "silent_frame_ratio": {"type": "number", "minimum": 0, "maximum": 1}, "all_silent": {"type": "boolean"}, "warnings": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": true}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/tts-runtime-preflight-v2.schema.json",
+  "title": "TTS Runtime Preflight v2 (with artifact readiness)",
+  "type": "object",
+  "required": [
+    "schema_version", "engine", "status", "diagnostic_only", "installation_performed",
+    "model_downloaded", "inference_verified", "interpreter_report", "selected_engine_interpreter",
+    "required_distributions", "missing_engine_modules", "network", "network_ready", "wheelhouse",
+    "notes", "artifact_readiness"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+    "status": {"enum": ["NO_SUPPORTED_INTERPRETER", "WHEELHOUSE_PRESENT_UNVERIFIED", "NETWORK_UNAVAILABLE", "ENGINE_DEPENDENCIES_MISSING", "ENGINE_PREREQUISITES_PRESENT"]},
+    "diagnostic_only": {"const": true},
+    "installation_performed": {"const": false},
+    "model_downloaded": {"const": false},
+    "inference_verified": {"const": false},
+    "interpreter_report": {
+      "type": "object",
+      "required": ["schema_version", "diagnostic_only", "installation_performed", "model_downloaded", "inference_verified", "candidate_count", "selected_interpreter", "selected_python_version", "supported_policy", "interpreters", "status"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "diagnostic_only": {"const": true},
+        "installation_performed": {"const": false},
+        "model_downloaded": {"const": false},
+        "inference_verified": {"const": false},
+        "candidate_count": {"type": "integer", "minimum": 0},
+        "selected_interpreter": {"type": ["string", "null"]},
+        "selected_python_version": {"type": ["string", "null"]},
+        "supported_policy": {"type": "object"},
+        "interpreters": {"type": "array", "items": {"type": "object"}},
+        "status": {"enum": ["READY_FOR_ENGINE_PREFLIGHT", "NO_SUPPORTED_INTERPRETER"]}
+      },
+      "additionalProperties": true
+    },
+    "selected_engine_interpreter": {"type": ["string", "null"]},
+    "required_distributions": {"type": "array", "items": {"type": "string"}},
+    "missing_engine_modules": {"type": "array", "items": {"type": "string"}},
+    "network": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": {"type": "string"},
+          "status": {"enum": ["REACHABLE", "REACHABLE_HTTP_ERROR", "UNREACHABLE"]},
+          "http_status": {"type": "integer"},
+          "error_type": {"type": "string"},
+          "elapsed_ms": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "network_ready": {"type": ["boolean", "null"]},
+    "wheelhouse": {"type": ["object", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "artifact_readiness": {
+      "type": "object",
+      "required": ["schema_version", "diagnostic_only", "engine", "status", "model_root", "artifacts", "missing_required", "missing_optional", "artifact_ready", "inference_verified", "installation_performed", "model_downloaded", "hash_limit_bytes", "scan_entry_limit", "scan_depth_limit"],
+      "properties": {
+        "schema_version": {"const": 2},
+        "diagnostic_only": {"const": true},
+        "engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+        "status": {"enum": ["MODEL_ROOT_NOT_CONFIGURED", "ARTIFACTS_MISSING", "ARTIFACTS_INCOMPLETE", "ARTIFACTS_READY", "ARTIFACTS_UNREADABLE", "ARTIFACT_PATH_UNSAFE", "ARTIFACT_SCAN_INCOMPLETE", "ARTIFACT_INSPECTION_ERROR"]},
+        "model_root": {"type": ["string", "null"]},
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["engine_id", "artifact_id", "relative_candidates", "required", "required_file_groups", "satisfied_file_groups", "kind", "present", "matched_path", "match_count", "state", "hash_status", "candidate_issues"],
+            "properties": {
+              "engine_id": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+              "artifact_id": {"type": "string", "minLength": 1},
+              "relative_candidates": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "required": {"type": "boolean"},
+              "required_file_groups": {"type": "array", "items": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}},
+              "satisfied_file_groups": {"type": "array", "items": {"type": "boolean"}},
+              "kind": {"enum": ["file", "directory"]},
+              "present": {"type": "boolean"},
+              "matched_path": {"type": ["string", "null"]},
+              "match_count": {"type": "integer", "minimum": 0},
+              "state": {"enum": ["MODEL_ROOT_NOT_CONFIGURED", "MISSING", "PRESENT", "INCOMPLETE", "EMPTY", "UNREADABLE", "PATH_UNSAFE", "UNSUPPORTED_TYPE", "SCAN_LIMIT_EXCEEDED", "CHANGED_DURING_SCAN", "IO_ERROR"]},
+              "hash_status": {"type": "string"},
+              "candidate_issues": {"type": "array", "items": {"type": "string"}},
+              "relative_path": {"type": "string"},
+              "size_bytes": {"type": "integer", "minimum": 0},
+              "regular_file_count": {"type": "integer", "minimum": 0},
+              "entries_scanned": {"type": "integer", "minimum": 0},
+              "symlink_entries_seen": {"type": "integer", "minimum": 0},
+              "required_file_matches": {"type": "array", "items": {"type": ["string", "null"]}},
+              "required_file_hashes": {"type": "array", "items": {"type": "object", "required": ["group_index", "relative_path", "hash_status", "bytes_hashed"], "properties": {"group_index": {"type": "integer", "minimum": 0}, "relative_path": {"type": "string", "minLength": 1}, "hash_status": {"enum": ["SKIPPED_SIZE_LIMIT", "SHA256_COMPLETE", "CHANGED_DURING_SCAN", "UNREADABLE", "IO_ERROR"]}, "size_bytes": {"type": "integer", "minimum": 0}, "bytes_hashed": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "error_type": {"type": "string", "minLength": 1}}, "additionalProperties": false}},
+              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "bytes_hashed": {"type": "integer", "minimum": 0},
+              "error_type": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "missing_required": {"type": "array", "items": {"type": "string"}},
+        "missing_optional": {"type": "array", "items": {"type": "string"}},
+        "artifact_ready": {"type": "boolean"},
+        "inference_verified": {"const": false},
+        "installation_performed": {"const": false},
+        "model_downloaded": {"const": false},
+        "hash_limit_bytes": {"type": ["integer", "null"], "minimum": 1},
+        "scan_entry_limit": {"type": "integer", "minimum": 1},
+        "scan_depth_limit": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

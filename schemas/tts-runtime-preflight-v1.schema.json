@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/tts-runtime-preflight-v1.schema.json",
+  "title": "TTS Runtime Preflight v1",
+  "type": "object",
+  "required": ["schema_version", "engine", "status", "diagnostic_only", "installation_performed", "model_downloaded", "inference_verified", "interpreter_report", "selected_engine_interpreter", "required_distributions", "missing_engine_modules", "network", "network_ready", "wheelhouse", "notes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "engine": {"enum": ["kokoro", "chatterbox", "qwen3_tts"]},
+    "status": {"enum": ["NO_SUPPORTED_INTERPRETER", "WHEELHOUSE_PRESENT_UNVERIFIED", "NETWORK_UNAVAILABLE", "ENGINE_DEPENDENCIES_MISSING", "ENGINE_PREREQUISITES_PRESENT"]},
+    "diagnostic_only": {"const": true},
+    "installation_performed": {"const": false},
+    "model_downloaded": {"const": false},
+    "inference_verified": {"const": false},
+    "interpreter_report": {"type": "object", "required": ["schema_version", "diagnostic_only", "installation_performed", "model_downloaded", "inference_verified", "candidate_count", "selected_interpreter", "selected_python_version", "supported_policy", "interpreters", "status"], "properties": {"schema_version": {"const": 1}, "diagnostic_only": {"const": true}, "installation_performed": {"const": false}, "model_downloaded": {"const": false}, "inference_verified": {"const": false}, "candidate_count": {"type": "integer", "minimum": 0}, "selected_interpreter": {"type": ["string", "null"]}, "selected_python_version": {"type": ["string", "null"]}, "supported_policy": {"type": "object"}, "interpreters": {"type": "array", "items": {"type": "object"}}, "status": {"enum": ["READY_FOR_ENGINE_PREFLIGHT", "NO_SUPPORTED_INTERPRETER"]}}, "additionalProperties": true},
+    "selected_engine_interpreter": {"type": ["string", "null"]},
+    "required_distributions": {"type": "array", "items": {"type": "string"}},
+    "missing_engine_modules": {"type": "array", "items": {"type": "string"}},
+    "network": {"type": "array", "items": {"type": "object", "required": ["url", "status"], "properties": {"url": {"type": "string"}, "status": {"enum": ["REACHABLE", "REACHABLE_HTTP_ERROR", "UNREACHABLE"]}, "http_status": {"type": "integer"}, "error_type": {"type": "string"}, "elapsed_ms": {"type": "integer", "minimum": 0}}, "additionalProperties": false}},
+    "network_ready": {"type": ["boolean", "null"]},
+    "wheelhouse": {"type": ["object", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

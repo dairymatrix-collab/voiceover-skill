@@ -1,0 +1,29 @@
+{
+  "blocking_reasons": [],
+  "diagnostic_only": true,
+  "engine_id": "qwen3_tts",
+  "inference_verified": false,
+  "installation_performed": false,
+  "limits": {
+    "cpu_threads": 2,
+    "max_chunk_chars": 800,
+    "maximum_process_tree_rss_mb": 10240,
+    "minimum_available_memory_mb": 14336,
+    "minimum_free_disk_mb": 8192,
+    "smoke_timeout_seconds": 300
+  },
+  "model_downloaded": false,
+  "notes": [
+    "A passing preflight does not prove that model weights are present, load, or synthesize audio.",
+    "RSS limits are enforced by polling and may overshoot between samples; this is not an OS hard memory limit."
+  ],
+  "observed": {
+    "available_cpu_count": 8,
+    "available_memory_mb": 21108,
+    "current_process_tree_rss_mb": 16,
+    "free_disk_mb": 48342,
+    "resource_monitor_available": true
+  },
+  "schema_version": 1,
+  "status": "READY_TO_ATTEMPT"
+}

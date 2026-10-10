@@ -1,0 +1,292 @@
+{
+  "protocol": "voiceover-ipc-v1-schema-vectors",
+  "scope": "JSON-representable values only; direct Python-only values are covered separately",
+  "request": [
+    {
+      "name": "version-boolean-true",
+      "path": [
+        "protocol_version"
+      ],
+      "value": true,
+      "valid": false
+    },
+    {
+      "name": "version-null",
+      "path": [
+        "protocol_version"
+      ],
+      "value": null,
+      "valid": false
+    },
+    {
+      "name": "version-zero",
+      "path": [
+        "protocol_version"
+      ],
+      "value": 0,
+      "valid": false
+    },
+    {
+      "name": "version-one",
+      "path": [
+        "protocol_version"
+      ],
+      "value": 1,
+      "valid": true
+    },
+    {
+      "name": "version-one-decimal-json-number",
+      "path": [
+        "protocol_version"
+      ],
+      "value": 1.0,
+      "valid": true
+    },
+    {
+      "name": "version-two",
+      "path": [
+        "protocol_version"
+      ],
+      "value": 2,
+      "valid": false
+    },
+    {
+      "name": "deadline-boolean",
+      "path": [
+        "deadline_ms"
+      ],
+      "value": true,
+      "valid": false
+    },
+    {
+      "name": "deadline-minimum",
+      "path": [
+        "deadline_ms"
+      ],
+      "value": 1,
+      "valid": true
+    },
+    {
+      "name": "deadline-maximum",
+      "path": [
+        "deadline_ms"
+      ],
+      "value": 86400000,
+      "valid": true
+    },
+    {
+      "name": "deadline-too-large",
+      "path": [
+        "deadline_ms"
+      ],
+      "value": 86400001,
+      "valid": false
+    },
+    {
+      "name": "speed-boolean",
+      "path": [
+        "options",
+        "speed"
+      ],
+      "value": true,
+      "valid": false
+    },
+    {
+      "name": "speed-null",
+      "path": [
+        "options",
+        "speed"
+      ],
+      "value": null,
+      "valid": false
+    },
+    {
+      "name": "speed-minimum",
+      "path": [
+        "options",
+        "speed"
+      ],
+      "value": 0.5,
+      "valid": true
+    },
+    {
+      "name": "speed-maximum",
+      "path": [
+        "options",
+        "speed"
+      ],
+      "value": 2.0,
+      "valid": true
+    },
+    {
+      "name": "speed-too-large",
+      "path": [
+        "options",
+        "speed"
+      ],
+      "value": 2.01,
+      "valid": false
+    },
+    {
+      "name": "reference-canonical",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "inputs/ref-01.wav",
+        "media_type": "audio/wav"
+      },
+      "valid": true
+    },
+    {
+      "name": "reference-dot-segment",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "./inputs/ref.wav",
+        "media_type": "audio/wav"
+      },
+      "valid": false
+    },
+    {
+      "name": "reference-parent-segment",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "../ref.wav",
+        "media_type": "audio/wav"
+      },
+      "valid": false
+    },
+    {
+      "name": "reference-repeated-separator",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "inputs//ref.wav",
+        "media_type": "audio/wav"
+      },
+      "valid": false
+    },
+    {
+      "name": "reference-trailing-separator",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "inputs/",
+        "media_type": "audio/wav"
+      },
+      "valid": false
+    },
+    {
+      "name": "reference-space",
+      "path": [
+        "reference_audio"
+      ],
+      "value": {
+        "relative_path": "inputs/ref file.wav",
+        "media_type": "audio/wav"
+      },
+      "valid": false
+    }
+  ],
+  "result": [
+    {
+      "name": "result-version-boolean",
+      "path": [
+        "protocol_version"
+      ],
+      "value": true,
+      "valid": false
+    },
+    {
+      "name": "result-version-one",
+      "path": [
+        "protocol_version"
+      ],
+      "value": 1,
+      "valid": true
+    },
+    {
+      "name": "result-duration-null",
+      "path": [
+        "duration_ms"
+      ],
+      "value": null,
+      "valid": true
+    },
+    {
+      "name": "result-duration-boolean",
+      "path": [
+        "duration_ms"
+      ],
+      "value": true,
+      "valid": false
+    },
+    {
+      "name": "result-duration-negative",
+      "path": [
+        "duration_ms"
+      ],
+      "value": -1,
+      "valid": false
+    },
+    {
+      "name": "result-output-canonical",
+      "path": [
+        "output"
+      ],
+      "value": {
+        "relative_path": "outputs/final.wav",
+        "format": "wav",
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "frame_count": 100,
+        "size_bytes": 244
+      },
+      "valid": true
+    },
+    {
+      "name": "result-output-trailing-separator",
+      "path": [
+        "output"
+      ],
+      "value": {
+        "relative_path": "outputs/",
+        "format": "wav",
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "frame_count": 100,
+        "size_bytes": 244
+      },
+      "valid": false
+    },
+    {
+      "name": "result-sample-rate-boolean",
+      "path": [
+        "output"
+      ],
+      "value": {
+        "relative_path": "outputs/final.wav",
+        "format": "wav",
+        "sample_rate_hz": true,
+        "channels": 1,
+        "frame_count": 100,
+        "size_bytes": 244
+      },
+      "valid": false
+    },
+    {
+      "name": "result-status-unknown",
+      "path": [
+        "status"
+      ],
+      "value": "pending",
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "corpus_version": "1.0",
+  "cases": [
+    {
+      "raw_message": "manifest is missing or unsafe representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_MISSING_OR_UNSAFE",
+        "category": "manifest",
+        "severity": "error",
+        "message": "Manifest is missing or its path is unsafe.",
+        "remediation": "Provide the required manifest at the bundle root using its canonical filename."
+      }
+    },
+    {
+      "raw_message": "manifest exceeds size limit representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_TOO_LARGE",
+        "category": "resource_limit",
+        "severity": "error",
+        "message": "Manifest exceeds the verifier's configured size limit.",
+        "remediation": "Inspect the bundle source and regenerate a bounded manifest."
+      }
+    },
+    {
+      "raw_message": "manifest parse failed: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_PARSE_FAILED",
+        "category": "manifest",
+        "severity": "error",
+        "message": "Manifest is not valid strict UTF-8 JSON or contains disallowed JSON structures.",
+        "remediation": "Regenerate the manifest as UTF-8 JSON with unique keys and finite JSON values."
+      }
+    },
+    {
+      "raw_message": "manifest schema: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_SCHEMA_INVALID",
+        "category": "schema",
+        "severity": "error",
+        "message": "Manifest fails schema validation or the verifier schema is unavailable.",
+        "remediation": "Use the published manifest schema and check the local verifier installation."
+      }
+    },
+    {
+      "raw_message": "manifest schema unavailable representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_SCHEMA_INVALID",
+        "category": "schema",
+        "severity": "error",
+        "message": "Manifest fails schema validation or the verifier schema is unavailable.",
+        "remediation": "Use the published manifest schema and check the local verifier installation."
+      }
+    },
+    {
+      "raw_message": "unsupported manifest version representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_MANIFEST_FORMAT_UNSUPPORTED",
+        "category": "compatibility",
+        "severity": "error",
+        "message": "Manifest version, hash algorithm, or canonicalization is unsupported.",
+        "remediation": "Regenerate the bundle with a compatible verifier and documented format version."
+      }
+    },
+    {
+      "raw_message": "unsafe manifest file path: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_PATH_UNSAFE_OR_DUPLICATE",
+        "category": "path",
+        "severity": "error",
+        "message": "A manifest path is unsafe, non-canonical, or duplicated.",
+        "remediation": "Use unique canonical relative POSIX paths without traversal, drive prefixes, or backslashes."
+      }
+    },
+    {
+      "raw_message": "envelope_path is unsafe representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_PATH_UNSAFE_OR_DUPLICATE",
+        "category": "path",
+        "severity": "error",
+        "message": "A manifest path is unsafe, non-canonical, or duplicated.",
+        "remediation": "Use unique canonical relative POSIX paths without traversal, drive prefixes, or backslashes."
+      }
+    },
+    {
+      "raw_message": "duplicate manifest path: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_PATH_UNSAFE_OR_DUPLICATE",
+        "category": "path",
+        "severity": "error",
+        "message": "A manifest path is unsafe, non-canonical, or duplicated.",
+        "remediation": "Use unique canonical relative POSIX paths without traversal, drive prefixes, or backslashes."
+      }
+    },
+    {
+      "raw_message": "unsafe or duplicate representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_PATH_UNSAFE_OR_DUPLICATE",
+        "category": "path",
+        "severity": "error",
+        "message": "A manifest path is unsafe, non-canonical, or duplicated.",
+        "remediation": "Use unique canonical relative POSIX paths without traversal, drive prefixes, or backslashes."
+      }
+    },
+    {
+      "raw_message": "missing or unsafe file: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_FILE_MISSING_OR_UNSAFE",
+        "category": "inventory",
+        "severity": "error",
+        "message": "A listed file is absent, unsafe, symlinked, or not a regular in-bundle file.",
+        "remediation": "Restore the expected regular file and remove symlinks or paths escaping the bundle."
+      }
+    },
+    {
+      "raw_message": "manifest lists absent file: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_FILE_MISSING_OR_UNSAFE",
+        "category": "inventory",
+        "severity": "error",
+        "message": "A listed file is absent, unsafe, symlinked, or not a regular in-bundle file.",
+        "remediation": "Restore the expected regular file and remove symlinks or paths escaping the bundle."
+      }
+    },
+    {
+      "raw_message": "size mismatch: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_FILE_SIZE_MISMATCH",
+        "category": "integrity",
+        "severity": "error",
+        "message": "A payload file size differs from the manifest.",
+        "remediation": "Restore the original artifact or regenerate the manifest after an authorized change."
+      }
+    },
+    {
+      "raw_message": "SHA-256 mismatch: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_FILE_HASH_MISMATCH",
+        "category": "integrity",
+        "severity": "error",
+        "message": "A payload file digest differs from the manifest.",
+        "remediation": "Treat the bundle as changed; verify the source independently before regenerating hashes."
+      }
+    },
+    {
+      "raw_message": "unlisted file: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_FILE_UNLISTED",
+        "category": "inventory",
+        "severity": "error",
+        "message": "The bundle contains a file not listed in the manifest.",
+        "remediation": "Remove unintended files or rebuild the manifest from the approved bundle contents."
+      }
+    },
+    {
+      "raw_message": "symlink is not allowed: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_SYMLINK_FORBIDDEN",
+        "category": "path",
+        "severity": "error",
+        "message": "The bundle contains a symbolic link.",
+        "remediation": "Replace symlinks with approved regular files inside the bundle."
+      }
+    },
+    {
+      "raw_message": "envelope_sha256 does not match representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_ENVELOPE_HASH_BINDING_MISMATCH",
+        "category": "binding",
+        "severity": "error",
+        "message": "The manifest envelope digest does not match its inventory entry.",
+        "remediation": "Rebuild the envelope and manifest in the documented order."
+      }
+    },
+    {
+      "raw_message": "envelope artifact hashes do not exactly match representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_ENVELOPE_INVENTORY_MISMATCH",
+        "category": "binding",
+        "severity": "error",
+        "message": "Envelope artifact hashes do not exactly match the manifest payload inventory.",
+        "remediation": "Regenerate envelope artifact entries and manifest from the same finalized payload set."
+      }
+    },
+    {
+      "raw_message": "envelope verification failed: representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_ENVELOPE_INVALID",
+        "category": "envelope",
+        "severity": "error",
+        "message": "The provenance envelope is missing, invalid, or inconsistent.",
+        "remediation": "Validate the provenance envelope and ensure its path is included in the manifest inventory."
+      }
+    },
+    {
+      "raw_message": "manifest envelope_path is not in file inventory representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_ENVELOPE_INVALID",
+        "category": "envelope",
+        "severity": "error",
+        "message": "The provenance envelope is missing, invalid, or inconsistent.",
+        "remediation": "Validate the provenance envelope and ensure its path is included in the manifest inventory."
+      }
+    },
+    {
+      "raw_message": "provenance envelope missing from file inventory representative verifier failure",
+      "expected": {
+        "code": "BUNDLE_ENVELOPE_INVALID",
+        "category": "envelope",
+        "severity": "error",
+        "message": "The provenance envelope is missing, invalid, or inconsistent.",
+        "remediation": "Validate the provenance envelope and ensure its path is included in the manifest inventory."
+      }
+    },
+    {
+      "raw_message": "unrecognized verifier failure: golden fallback",
+      "expected": {
+        "code": "BUNDLE_VERIFICATION_FAILED_UNCLASSIFIED",
+        "category": "verification",
+        "severity": "error",
+        "message": "Verification failed for a condition without a dedicated diagnostic mapping.",
+        "remediation": "Inspect raw_message, preserve the failing bundle, and report the case so a stable code can be added."
+      }
+    }
+  ]
+}

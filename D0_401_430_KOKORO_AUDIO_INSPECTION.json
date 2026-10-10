@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "report": {
+    "all_silent": false,
+    "channels": 1,
+    "clipping_sample_ratio": 0.0,
+    "duration_seconds": 4.225,
+    "file": "voiceover.wav",
+    "format": "wav-pcm",
+    "frames": 101400,
+    "peak_normalized": 0.312295907,
+    "rms_normalized": 0.046003475,
+    "sample_rate_hz": 24000,
+    "sample_width_bytes": 2,
+    "schema_version": 1,
+    "sha256": "9d328112dd41f42c1d859c99ab2fcaf845646193e0f2096b3b09242cf843bf39",
+    "silent_frame_ratio": 0.306646943,
+    "size_bytes": 202844,
+    "warnings": []
+  }
+}

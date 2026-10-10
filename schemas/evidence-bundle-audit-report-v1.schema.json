@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/evidence-bundle-audit-report-v1.schema.json",
+  "title": "Evidence Bundle Audit Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_report_schema_version",
+    "verifier",
+    "checked_at",
+    "bundle_path",
+    "manifest_name",
+    "status",
+    "checks",
+    "error_count",
+    "errors",
+    "limitations"
+  ],
+  "properties": {
+    "audit_report_schema_version": {
+      "const": "1.0"
+    },
+    "verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "bundle_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manifest_name": {
+      "const": "evidence-bundle-manifest-v1.json"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "ERROR"
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_schema",
+        "file_inventory_and_hashes",
+        "envelope_payload_binding",
+        "cryptographic_authenticity"
+      ],
+      "properties": {
+        "manifest_schema": {
+          "enum": [
+            "PASS",
+            "SEE_ERRORS"
+          ]
+        },
+        "file_inventory_and_hashes": {
+          "enum": [
+            "PASS",
+            "SEE_ERRORS"
+          ]
+        },
+        "envelope_payload_binding": {
+          "enum": [
+            "PASS",
+            "SEE_ERRORS"
+          ]
+        },
+        "cryptographic_authenticity": {
+          "const": "NOT_ESTABLISHED"
+        }
+      }
+    },
+    "error_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "category",
+          "severity",
+          "message",
+          "remediation",
+          "raw_message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "warning",
+              "error",
+              "critical"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "remediation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "raw_message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "error_count": {
+            "const": 0
+          },
+          "errors": {
+            "maxItems": 0
+          },
+          "checks": {
+            "properties": {
+              "manifest_schema": {
+                "const": "PASS"
+              },
+              "file_inventory_and_hashes": {
+                "const": "PASS"
+              },
+              "envelope_payload_binding": {
+                "const": "PASS"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAIL"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "error_count": {
+            "minimum": 1
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

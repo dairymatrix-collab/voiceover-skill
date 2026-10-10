@@ -1,0 +1,17 @@
+{
+  "protocol_version": 1,
+  "message_type": "synthesis.result",
+  "request_id": "req_fixture_001",
+  "job_id": "job_fixture_001",
+  "status": "ok",
+  "duration_ms": 1250,
+  "output": {
+    "relative_path": "outputs/fixture.wav",
+    "format": "wav",
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "frame_count": 30000,
+    "size_bytes": 60044
+  },
+  "error": null
+}

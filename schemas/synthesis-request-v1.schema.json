@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:voiceover:schemas:synthesis-request-v1",
+  "title": "Voiceover synthesis request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_type",
+    "request_id",
+    "job_id",
+    "engine_id",
+    "text",
+    "options",
+    "deadline_ms",
+    "reference_audio"
+  ],
+  "properties": {
+    "protocol_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "message_type": {
+      "const": "synthesis.request"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "maxLength": 64
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "maxLength": 64
+    },
+    "engine_id": {
+      "enum": [
+        "qwen3_tts",
+        "chatterbox",
+        "kokoro"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]*$"
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 32,
+          "pattern": "^[A-Za-z0-9_-]*$"
+        },
+        "voice_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_.-]*$"
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2.0
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "output_format": {
+          "const": "wav"
+        }
+      }
+    },
+    "deadline_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400000
+    },
+    "reference_audio": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "relative_path",
+            "media_type"
+          ],
+          "properties": {
+            "relative_path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))[A-Za-z0-9_./-]+$"
+            },
+            "media_type": {
+              "enum": [
+                "audio/wav",
+                "audio/mpeg",
+                "audio/flac",
+                "audio/ogg"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "maxLength": 64
+    }
+  }
+}

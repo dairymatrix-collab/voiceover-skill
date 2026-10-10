@@ -1,0 +1,17 @@
+{
+  "protocol_version": 1,
+  "message_type": "synthesis.request",
+  "request_id": "req_fixture_001",
+  "job_id": "job_fixture_001",
+  "engine_id": "kokoro",
+  "text": "Fixture-based compatibility test.",
+  "options": {
+    "language": "en-us",
+    "voice_id": "af_heart",
+    "speed": 1.0,
+    "seed": 7,
+    "output_format": "wav"
+  },
+  "deadline_ms": 30000,
+  "reference_audio": null
+}

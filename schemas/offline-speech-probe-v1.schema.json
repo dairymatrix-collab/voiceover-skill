@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/offline-speech-probe-v1.schema.json",
+  "title": "Offline Speech Probe v1",
+  "type": "object",
+  "required": ["schema_version", "status", "diagnostic_only", "neural_engine", "inference_verified", "speech_output_verified"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "engine_id": {"const": "espeak_offline"},
+    "engine_kind": {"const": "system_formant_tts"},
+    "diagnostic_only": {"const": true},
+    "neural_engine": {"const": false},
+    "inference_verified": {"const": false},
+    "speech_output_verified": {"type": "boolean"},
+    "text_characters": {"type": "integer", "minimum": 1, "maximum": 20000},
+    "language": {"type": "string"},
+    "speed_wpm": {"type": "integer", "minimum": 80, "maximum": 450},
+    "output_file": {"type": "string"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "elapsed_ms": {"type": "integer", "minimum": 0},
+    "audio_quality": {"type": "object"},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "error": {"type": "string"},
+    "detail_type": {"type": "string"},
+    "exit_code": {"type": "integer"}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "PASS"}}, "required": ["status"]}, "then": {"required": ["engine_id", "engine_kind", "speech_output_verified", "audio_quality", "sha256", "output_file"], "properties": {"speech_output_verified": {"const": true}}}},
+    {"if": {"properties": {"status": {"enum": ["FAIL", "BLOCKED"]}}, "required": ["status"]}, "then": {"properties": {"speech_output_verified": {"const": false}}}}
+  ],
+  "additionalProperties": true
+}
